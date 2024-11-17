@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse 
 from django.contrib import messages
-from .models import Book, Library
+from .models import Book, Library, UserProfile
 
 # Function-based view to list all books
 def list_books(request):
