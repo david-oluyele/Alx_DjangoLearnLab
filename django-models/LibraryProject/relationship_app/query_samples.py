@@ -1,4 +1,4 @@
-from .models import Author, Book, Library
+from .models import Author, Book, Library, Librarian
 
 # 1. Query all books by a specific author
 def get_books_by_author(author_name):
@@ -36,12 +36,12 @@ def get_librarian_for_library(library_name):
         # Get the library instance by name
         library = Library.objects.get(name=library_name)
         
-        # Access the librarian assigned to this library
-        librarian = library.librarian
+        # Directly get the librarian using the library as a filter in Librarian model
+        librarian = Librarian.objects.get(library=library)
         print(f"The librarian for '{library_name}' is: {librarian.name}")
     except Library.DoesNotExist:
         print(f"No library found with the name '{library_name}'.")
-    except Library.librarian.RelatedObjectDoesNotExist:
+    except Librarian.DoesNotExist:
         print(f"No librarian assigned to the library '{library_name}'.")
 
 # Example usage (replace with actual names when testing)
