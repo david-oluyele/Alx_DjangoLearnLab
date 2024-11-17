@@ -4,6 +4,8 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponse 
 from django.contrib import messages
 from .models import Book, Library
 
@@ -52,3 +54,31 @@ def login_view(request):
 def logout_view(request):
     logout(request)  # Logout the user
     return render(request, "relationship_app/logout.html")
+
+# Helper functions to check user roles
+def is_admin(user):
+    return user.userprofile.role == 'Admin'
+
+def is_librarian(user):
+    return user.userprofile.role == 'Librarian'
+
+def is_member(user):
+    return user.userprofile.role == 'Member'
+
+# Admin view - only accessible by users with 'Admin' role
+@login_required
+@user_passes_test(is_admin)
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
+
+# Librarian view - only accessible by users with 'Librarian' role
+@login_required
+@user_passes_test(is_librarian)
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
+
+# Member view - only accessible by users with 'Member' role
+@login_required
+@user_passes_test(is_member)
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
