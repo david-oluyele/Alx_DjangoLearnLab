@@ -19,7 +19,6 @@ class LibraryDetailView(DetailView):
     context_object_name = 'library'
 
     def get_object(self):
-        # Fetch the library by ID from the URL pattern
         return get_object_or_404(Library, pk=self.kwargs['pk'])
 
 # Registration view
@@ -28,9 +27,9 @@ def register_view(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Log the user in after successful registration
+            login(request, user)
             messages.success(request, "Your account has been created successfully.")
-            return redirect("login")  # Redirect to login after successful registration
+            return redirect("login")
     else:
         form = UserCreationForm()
     return render(request, "relationship_app/register.html", {"form": form})
@@ -41,8 +40,8 @@ def login_view(request):
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
-            login(request, user)  # Log the user in
-            return redirect("home")  # Redirect to home after successful login
+            login(request, user)
+            return redirect("home")
     else:
         form = AuthenticationForm()
     return render(request, "relationship_app/login.html", {"form": form})
@@ -50,33 +49,30 @@ def login_view(request):
 # Logout view
 @login_required
 def logout_view(request):
-    logout(request)  # Logout the user
+    logout(request)
     return render(request, "relationship_app/logout.html")
 
-# Helper functions to check user roles
-def is_admin(user):
-    return user.userprofile.role == 'Admin'
+# Custom decorators for role-based access
+def admin_required(view_func):
+    return login_required(user_passes_test(lambda user: user.userprofile.role == 'Admin'))(view_func)
 
-def is_librarian(user):
-    return user.userprofile.role == 'Librarian'
+def librarian_required(view_func):
+    return login_required(user_passes_test(lambda user: user.userprofile.role == 'Librarian'))(view_func)
 
-def is_member(user):
-    return user.userprofile.role == 'Member'
+def member_required(view_func):
+    return login_required(user_passes_test(lambda user: user.userprofile.role == 'Member'))(view_func)
 
 # Admin view - only accessible by users with 'Admin' role
-@login_required
-@user_passes_test(is_admin)
+@admin_required
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
 # Librarian view - only accessible by users with 'Librarian' role
-@login_required
-@user_passes_test(is_librarian)
+@librarian_required
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
 
 # Member view - only accessible by users with 'Member' role
-@login_required
-@user_passes_test(is_member)
+@member_required
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
