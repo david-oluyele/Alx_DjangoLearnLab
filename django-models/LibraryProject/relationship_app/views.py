@@ -1,4 +1,4 @@
-# Import necessary modules
+# Import necessary modules 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.detail import DetailView
 from django.contrib.auth import login, logout, authenticate
@@ -54,13 +54,13 @@ def logout_view(request):
 
 # Custom decorators for role-based access
 def admin_required(view_func):
-    return login_required(user_passes_test(lambda user: user.userprofile.role == 'Admin'))(view_func)
+    return login_required(user_passes_test(lambda user: hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'))(view_func)
 
 def librarian_required(view_func):
-    return login_required(user_passes_test(lambda user: user.userprofile.role == 'Librarian'))(view_func)
+    return login_required(user_passes_test(lambda user: hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'))(view_func)
 
 def member_required(view_func):
-    return login_required(user_passes_test(lambda user: user.userprofile.role == 'Member'))(view_func)
+    return login_required(user_passes_test(lambda user: hasattr(user, 'userprofile') and user.userprofile.role == 'Member'))(view_func)
 
 # Admin view - only accessible by users with 'Admin' role
 @admin_required
