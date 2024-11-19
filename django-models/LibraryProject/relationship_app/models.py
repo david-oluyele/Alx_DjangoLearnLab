@@ -41,7 +41,7 @@ ROLE_CHOICES = [
     ('Member', 'Member'),
 ]
 
-# UserProfile model to extend Django's built-in User model with a role
+# UserProfile model to extend the User model with roles
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
@@ -49,13 +49,12 @@ class UserProfile(models.Model):
     def __str__(self):
         return f'{self.user.username} - {self.role}'
 
-# Signal to automatically create a UserProfile when a new User is created
+# Signals to handle automatic UserProfile creation and saving
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
 
-# Signal to save the UserProfile when the User is saved
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.userprofile.save()

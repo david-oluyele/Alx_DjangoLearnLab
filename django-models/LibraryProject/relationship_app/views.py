@@ -1,10 +1,10 @@
 # Import necessary modules
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic.detail import DetailView
-from django.contrib.auth import login, logout
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout
 from django.contrib import messages
+from django.views.generic import DetailView
 from .models import Book, Library, UserProfile
 
 # Function-based view to list all books
@@ -15,11 +15,12 @@ def list_books(request):
 # Class-based view to display details for a specific library
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = 'relationship_app/library_detail.html'
-    context_object_name = 'library'
+    template_name = 'relationship_app/library_detail.html'  # specify the template for the view
+    context_object_name = 'library'  # this will be used to refer to the object in the template
 
     def get_object(self):
-        return get_object_or_404(Library, pk=self.kwargs['pk'])
+        # This function retrieves the object using the primary key from the URL
+        return Library.objects.get(pk=self.kwargs['pk'])
 
 # Registration view
 def register_view(request):
@@ -52,27 +53,33 @@ def logout_view(request):
     logout(request)
     return render(request, "relationship_app/logout.html")
 
-# Helper function for checking roles
-def role_check(role):
-    def check_user_role(user):
-        return hasattr(user, 'userprofile') and user.userprofile.role == role
-    return check_user_role
+# Helper functions to check roles
+def is_admin(user):
+    """Check if the user has an 'Admin' role."""
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
 
-# Custom decorator for roles using user_passes_test
-def role_required(role):
-    return login_required(user_passes_test(role_check(role), login_url='/login/', redirect_field_name=None))
+def is_librarian(user):
+    """Check if the user has a 'Librarian' role."""
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+
+def is_member(user):
+    """Check if the user has a 'Member' role."""
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
 
 # Admin view - only accessible by users with 'Admin' role
-@role_required('Admin')
+@login_required
+@user_passes_test(is_admin, login_url='/login/')
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
 # Librarian view - only accessible by users with 'Librarian' role
-@role_required('Librarian')
+@login_required
+@user_passes_test(is_librarian, login_url='/login/')
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
 
 # Member view - only accessible by users with 'Member' role
-@role_required('Member')
+@login_required
+@user_passes_test(is_member, login_url='/login/')
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')

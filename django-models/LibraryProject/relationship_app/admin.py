@@ -15,3 +15,4 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 # Register the UserProfile model with the custom UserProfileAdmin class
 admin.site.register(UserProfile, UserProfileAdmin)
+
