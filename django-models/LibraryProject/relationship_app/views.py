@@ -1,4 +1,4 @@
-# Import necessary modules 
+# Import necessary modules
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.detail import DetailView
 from django.contrib.auth import login, logout, authenticate
@@ -52,27 +52,35 @@ def logout_view(request):
     logout(request)
     return render(request, "relationship_app/logout.html")
 
-# Custom decorators for role-based access
-def admin_required(view_func):
-    return login_required(user_passes_test(lambda user: hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'))(view_func)
-
-def librarian_required(view_func):
-    return login_required(user_passes_test(lambda user: hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'))(view_func)
-
-def member_required(view_func):
-    return login_required(user_passes_test(lambda user: hasattr(user, 'userprofile') and user.userprofile.role == 'Member'))(view_func)
+# Helper function to check if a user is an Admin
+def is_admin(user):
+    """Checks if the user has an 'Admin' role."""
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
 
 # Admin view - only accessible by users with 'Admin' role
-@admin_required
+@login_required
+@user_passes_test(is_admin)
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
+# Helper function to check if a user is a Librarian
+def is_librarian(user):
+    """Checks if the user has a 'Librarian' role."""
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+
 # Librarian view - only accessible by users with 'Librarian' role
-@librarian_required
+@login_required
+@user_passes_test(is_librarian)
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
 
+# Helper function to check if a user is a Member
+def is_member(user):
+    """Checks if the user has a 'Member' role."""
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+
 # Member view - only accessible by users with 'Member' role
-@member_required
+@login_required
+@user_passes_test(is_member)
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
