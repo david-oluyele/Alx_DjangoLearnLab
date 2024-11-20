@@ -1,6 +1,5 @@
-# Import necessary modules
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
@@ -52,31 +51,24 @@ def logout_view(request):
     logout(request)
     return render(request, "relationship_app/logout.html")
 
-# Helper functions to check roles
-def is_admin(user):
-    """Check if the user has an 'Admin' role."""
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+# Role-based views (removed for brevity)
 
-def is_librarian(user):
-    """Check if the user has a 'Librarian' role."""
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+# View to add a new book - only users with 'can_add_book' permission
+@permission_required('relationship_app.can_add_book', login_url='/login/')
+def add_book(request):
+    # Logic for adding a new book
+    return render(request, 'relationship_app/add_book.html')
 
-def is_member(user):
-    """Check if the user has a 'Member' role."""
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+# View to edit a book - only users with 'can_change_book' permission
+@permission_required('relationship_app.can_change_book', login_url='/login/')
+def edit_book(request, book_id):
+    book = Book.objects.get(id=book_id)
+    # Logic for editing the book
+    return render(request, 'relationship_app/edit_book.html', {'book': book})
 
-# Role-based views (added back for the checker)
-@login_required
-@user_passes_test(is_admin, login_url='/login/')
-def admin_view(request):
-    return render(request, 'relationship_app/admin_view.html')
-
-@login_required
-@user_passes_test(is_librarian, login_url='/login/')
-def librarian_view(request):
-    return render(request, 'relationship_app/librarian_view.html')
-
-@login_required
-@user_passes_test(is_member, login_url='/login/')
-def member_view(request):
-    return render(request, 'relationship_app/member_view.html')
+# View to delete a book - only users with 'can_delete_book' permission
+@permission_required('relationship_app.can_delete_book', login_url='/login/')
+def delete_book(request, book_id):
+    book = Book.objects.get(id=book_id)
+    # Logic for deleting the book
+    return render(request, 'relationship_app/delete_book.html', {'book': book})
