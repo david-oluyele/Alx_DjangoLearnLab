@@ -6,6 +6,8 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.views.generic import DetailView
 from .models import Book, Library, UserProfile
+from .forms import BookForm
+
 
 # Function-based view to list all books
 def list_books(request):
@@ -55,21 +57,35 @@ def logout_view(request):
 # Role-based views (removed for brevity)
 
 # View to add a new book - only users with 'can_add_book' permission
-@permission_required('relationship_app.can_add_book', login_url='/login/')
+@permission_required('relationship_app.can_add_book', raise_exception=True)
 def add_book(request):
-    # Logic for adding a new book
-    return render(request, 'relationship_app/add_book.html')
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_books')  # Redirect to the list of books after adding
+    else:
+        form = BookForm()
+    return render(request, 'relationship_app/add_book.html', {'form': form})
 
 # View to edit a book - only users with 'can_change_book' permission
-@permission_required('relationship_app.can_change_book', login_url='/login/')
-def edit_book(request, book_id):
-    book = Book.objects.get(id=book_id)
-    # Logic for editing the book
-    return render(request, 'relationship_app/edit_book.html', {'book': book})
+@permission_required('relationship_app.can_change_book', raise_exception=True)
+def edit_book(request, pk):
+    book = Book.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('list_books')  # Redirect to the list of books after editing
+    else:
+        form = BookForm(instance=book)
+    return render(request, 'relationship_app/edit_book.html', {'form': form})
 
 # View to delete a book - only users with 'can_delete_book' permission
-@permission_required('relationship_app.can_delete_book', login_url='/login/')
-def delete_book(request, book_id):
-    book = Book.objects.get(id=book_id)
-    # Logic for deleting the book
+@permission_required('relationship_app.can_delete_book', raise_exception=True)
+def delete_book(request, pk):
+    book = Book.objects.get(pk=pk)
+    if request.method == 'POST':
+        book.delete()
+        return redirect('list_books')  # Redirect to the list of books after deletion
     return render(request, 'relationship_app/delete_book.html', {'book': book})
