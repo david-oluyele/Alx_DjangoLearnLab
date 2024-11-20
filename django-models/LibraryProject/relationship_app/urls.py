@@ -1,7 +1,8 @@
 from django.urls import path
-from django.contrib.auth.views import LoginView, LogoutView 
 from . import views
-from .views import list_books 
+from .views.admin_view import admin_view
+from .views.librarian_view import librarian_view
+from .views.member_view import member_view
 
 urlpatterns = [
     # Authentication URLs
@@ -10,9 +11,9 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
 
     # Role-based access URLs
-    path('admin/', views.admin_view, name='admin_view'),          # Admin-only view
-    path('librarian/', views.librarian_view, name='librarian_view'),  # Librarian-only view
-    path('member/', views.member_view, name='member_view'),        # Member-only view
+    path('admin/', admin_view, name='admin_view'),          # Admin-only view
+    path('librarian/', librarian_view, name='librarian_view'),  # Librarian-only view
+    path('member/', member_view, name='member_view'),        # Member-only view
 
     # Other URLs
     path('books/', views.list_books, name='list_books'),           # View for listing all books

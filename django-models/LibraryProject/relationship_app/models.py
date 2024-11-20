@@ -34,15 +34,14 @@ class Librarian(models.Model):
     def __str__(self):
         return self.name
 
-# Choices for user roles
-ROLE_CHOICES = [
+# UserProfile model to extend the User model with roles
+class UserProfile(models.Model):
+    # Choices for user roles
+    ROLE_CHOICES = [
     ('Admin', 'Admin'),
     ('Librarian', 'Librarian'),
     ('Member', 'Member'),
 ]
-
-# UserProfile model to extend the User model with roles
-class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
