@@ -1,0 +1,7 @@
+<!-- Include {% csrf_token %} tag in all forms that accept input -->
+
+<form method="POST" action="{% url 'example_view' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>

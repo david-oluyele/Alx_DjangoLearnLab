@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-kwdd$(_3op27y1dm!q6wfgdnr786y%t4k$%-&^6awf@sruoc(r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'yourdomain.com']
 
 
 # Application definition
@@ -49,6 +49,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+#Add CSP Middleware
+MIDDLEWARE += [
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
@@ -125,3 +130,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+#Add Security related setting to prevent against XSS, clickjacking and insecure content
+SECURE_BROWSER_XSS_FILTER = True  # Enables browser's XSS filter
+X_FRAME_OPTIONS = 'DENY'          # Prevents the site from being framed
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents the browser from MIME-type sniffing
+
+#Ensure Cookies are omly sent over HTTPS
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
