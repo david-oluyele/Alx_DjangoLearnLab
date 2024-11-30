@@ -56,6 +56,11 @@ MIDDLEWARE += [
     'csp.middleware.CSPMiddleware',
 ]
 
+#Define CSP Policies in settings.py
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'https://trusted-cdn.com')
+CSP_STYLE_SRC = ("'self'", 'https://trusted-cdn.com')
+
 ROOT_URLCONF = 'LibraryProject.urls'
 
 TEMPLATES = [
@@ -140,3 +145,25 @@ SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents the browser from MIME-type sniffi
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
+#Configure Django for HTTPS Support
+#Set SECURE_SSL_REDIRECT (Redirects all HTTP requests to HTTPS automatically)
+SECURE_SSL_REDIRECT = True 
+#Set SECURE_HSTS_SECONDS (Enforces HTTP Strict Transport Security (HSTS) for one year, ensuring browsers only access the site via HTTPS)
+SECURE_HSTS_SECONDS = 31536000  # One year in seconds
+#Enable HSTS Subdomain and Preload Directives (Ensures that HSTS policy applies to all subdomains and preloads the site into browsers for HTTPS-only access.)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+#Enforce Secure Cookies
+#Set SESSION_COOKIE_SECURE
+SESSION_COOKIE_SECURE = True #Ensures session cookies are only sent over HTTPS.
+#Set CSRF_COOKIE_SECURE
+CSRF_COOKIE_SECURE = True #Ensures CSRF cookies are only sent over HTTPS.
+
+#Implement Secure Headers
+#Set X_FRAME_OPTIONS
+X_FRAME_OPTIONS = 'DENY' #Prevents your site from being embedded in iframes, protecting against clickjacking attacks.
+#set SECURE_CONTENT_TYPE_NOSNIFF
+SECURE_CONTENT_TYPE_NOSNIFF = True #Prevents browsers from guessing the content type, mitigating MIME-sniffing attacks.
+#Enable Browsing XSS Filtering
+SECURE_BROWSER_XSS_FILTER = True #Activates the browser’s built-in XSS filter, reducing the risk of cross-site scripting attacks.
