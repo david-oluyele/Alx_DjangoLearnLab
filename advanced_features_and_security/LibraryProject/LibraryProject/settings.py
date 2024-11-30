@@ -167,3 +167,6 @@ X_FRAME_OPTIONS = 'DENY' #Prevents your site from being embedded in iframes, pro
 SECURE_CONTENT_TYPE_NOSNIFF = True #Prevents browsers from guessing the content type, mitigating MIME-sniffing attacks.
 #Enable Browsing XSS Filtering
 SECURE_BROWSER_XSS_FILTER = True #Activates the browser’s built-in XSS filter, reducing the risk of cross-site scripting attacks.
+
+#Add SECURE_PROXY_SSL_HEADER
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
