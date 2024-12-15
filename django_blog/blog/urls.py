@@ -16,9 +16,9 @@ urlpatterns = [
     # URL pattern for user profile
     path('profile/', views.profile, name='profile'),
 
-    path('posts/', PostListView.as_view(), name='post-list'),
-    path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
-    path('post/new/', PostCreateView.as_view(), name='post-create'),
-    path('post/<int:pk>/edit/', PostUpdateView.as_view(), name='post-edit'),
-    path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
+    path('posts/', PostListView.as_view(), name='post-list'), # List all posts
+    path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'), # View a single post
+    path('post/new/', PostCreateView.as_view(), name='post-create'), # Create a new post
+    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-edit'), # Edit an existing post
+    path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'), # Delete a post
 ]
