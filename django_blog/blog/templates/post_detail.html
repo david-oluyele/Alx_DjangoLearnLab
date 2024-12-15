@@ -1,0 +1,5 @@
+<!-- post_detail.html -->
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+<a href="{% url 'post-edit' post.pk %}">Edit</a>
+<a href="{% url 'post-delete' post.pk %}">Delete</a>

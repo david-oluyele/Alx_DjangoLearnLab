@@ -1,0 +1,7 @@
+<!-- post_list.html -->
+{% for post in posts %}
+  <h2><a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a></h2>
+  <p>{{ post.content|truncatewords:20 }}</p>
+  <a href="{% url 'post-edit' post.pk %}">Edit</a>
+  <a href="{% url 'post-delete' post.pk %}">Delete</a>
+{% endfor %}
