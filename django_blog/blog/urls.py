@@ -30,4 +30,7 @@ urlpatterns = [
     #URL Patterns for Search functionality and Viewing Posts by tag
     path('search/', search, name='search'),
     path('tags/<str:tag_name>/', views.tag_posts, name='tag-posts'),
+
+     # URL pattern for viewing posts by tag (slug)
+    path('tags/<slug:tag_slug>/', views.PostByTagListView.as_view(), name='posts-by-tag'),
 ]
