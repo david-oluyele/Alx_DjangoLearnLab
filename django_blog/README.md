@@ -78,3 +78,17 @@ Ensuring all comments are displayed correctly on the post detail page.
 # Conclusion
 The comment functionality allows users to engage with blog posts by leaving feedback, which enhances interactivity and community involvement.
 
+## Tagging and Search Functionality
+
+### Tags
+- Users can add tags to posts to categorize content.
+- Tags are displayed on the post details page and can be clicked to view all posts with that tag.
+
+### Search
+- Users can search for posts by title, content, or tags.
+- The search bar is available on the homepage and search results page.
+
+### Usage
+- To add tags to a post, use the post creation or editing form.
+- To search for posts, use the search bar at the top of the page.
+

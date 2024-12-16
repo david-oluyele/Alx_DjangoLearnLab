@@ -4,4 +4,9 @@
   <p>{{ post.content|truncatewords:20 }}</p>
   <a href="{% url 'post-edit' post.pk %}">Edit</a>
   <a href="{% url 'post-delete' post.pk %}">Delete</a>
+   <p>Tags: 
+        {% for tag in post.tags.all %}
+            <a href="{% url 'tag-posts' tag.name %}">{{ tag.name }}</a>
+        {% endfor %}
+    </p>
 {% endfor %}
