@@ -1,0 +1,6 @@
+<!-- blog/templates/blog/post_create.html -->
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}  <!-- This will render all form fields with the specified widgets -->
+    <button type="submit">Save Post</button>
+</form>
