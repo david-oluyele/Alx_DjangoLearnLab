@@ -8,6 +8,7 @@ from .models import Post, Comment
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
+from taggit.models import Tag
 
 # Create your views here.
 
@@ -125,3 +126,12 @@ def search(request):
         posts = Post.objects.all()
     
     return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
+
+def tag_posts(request, tag_name):
+    # Get the tag object based on the provided tag_name
+    tag = Tag.objects.get(name=tag_name)
+
+    # Get all posts that are associated with this tag
+    posts = Post.objects.filter(tags__name__in=[tag_name])
+
+    return render(request, 'blog/tag_posts.html', {'tag': tag, 'posts': posts})
