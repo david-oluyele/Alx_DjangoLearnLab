@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from . import views  # Import your custom views
-from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView
+from .views import PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView, CommentCreateView, CommentDeleteView, CommentUpdateView
 
 urlpatterns = [
     # URL pattern for login
@@ -21,4 +21,9 @@ urlpatterns = [
     path('post/new/', PostCreateView.as_view(), name='post-create'), # Create a new post
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-edit'), # Edit an existing post
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'), # Delete a post
+
+        # Comment CRUD
+    path('post/<int:post_id>/comments/new/', CommentCreateView.as_view(), name='comment-create'),
+    path('post/<int:post_id>/comments/<int:pk>/edit/', CommentUpdateView.as_view(), name='comment-edit'),
+    path('post/<int:post_id>/comments/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
 ]
